@@ -95,7 +95,8 @@ return [
 ```
 
 This is just a sample, all you need to do is to create instance of `\wodCZ\NetteSentryBridge\SentryLogger` 
-to start logging, and call `$logger->setContainer($container)` to extend logs with Nette Context.
+to start logging, and call `$logger->setContainer($container)` to extend logs with Nette Context 
+**and to log errors caught by Nette\Application**
 
 ### Important note to prevent confusion
 
