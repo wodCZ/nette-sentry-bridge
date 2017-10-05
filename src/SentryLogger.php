@@ -66,7 +66,7 @@ class SentryLogger extends \Raven_Processor
 
 	public function __construct($dsn, $options = [])
 	{
-		if ( ! Debugger::$productionMode) {
+		if (Debugger::isEnabled() && ! Debugger::$productionMode) {
 			return;
 		}
 		$this->raven = new \Raven_Client($dsn, $options);
@@ -92,6 +92,8 @@ class SentryLogger extends \Raven_Processor
 	{
 		$this->container = $container;
 		$container->addService('sentryBridge', $this);
+		$this->hookToApplicationOnError();
+
 	}
 
 	private function addUserData(&$data)
@@ -103,6 +105,10 @@ class SentryLogger extends \Raven_Processor
 			/** @var User $user */
 			$user = $this->container->getByType(User::class);
 			$identity = $user->getIdentity();
+			if ( ! $identity) {
+				return;
+			}
+
 			if ( ! array_key_exists('user', $data)) {
 				$data['user'] = [];
 			}
@@ -132,6 +138,19 @@ class SentryLogger extends \Raven_Processor
 			}
 			return $data;
 		} catch (\Exception $e) {
+		}
+	}
+
+	private function hookToApplicationOnError()
+	{
+		try {
+			/** @var Application $app */
+			$app = $this->container->getByType(Application::class);
+			$app->onError[] = function ($app, $e) {
+				$this->raven->captureException($e);
+			};
+		} catch (\Exception $e) {
+			$this->raven->captureException($e);
 		}
 	}
 }

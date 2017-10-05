@@ -60,7 +60,12 @@ return [
 	'dsn' => 'http://key:secret@sentry.example.com/123',
 	'options' => [
 		'app_path' => __DIR__.'/../',
-		'environment' => 'production', 
+		'environment' => 'production',
+		'exclude' => [
+			'Nette\Application\BadRequestException',
+			'Nette\Application\ForbiddenRequestException',
+			'Nette\Application\AbortException'
+		],
 		# 'revision' => '',
 		# all options: https://docs.sentry.io/clients/php/config/
 	]
@@ -77,7 +82,12 @@ return [
 	'dsn' => getenv('SENTRY_DSN'),
 	'options' => [
 		'app_path' => __DIR__.'/../',
-		'environment' => getenv('DEBUG') === 'true' ? 'development' : 'production', 
+		'environment' => getenv('DEBUG') === 'true' ? 'development' : 'production',
+		'exclude' => [
+			'Nette\Application\BadRequestException',
+			'Nette\Application\ForbiddenRequestException',
+			'Nette\Application\AbortException'
+		],
 		# 'revision' => '',
 		# all options: https://docs.sentry.io/clients/php/config/
 	]
