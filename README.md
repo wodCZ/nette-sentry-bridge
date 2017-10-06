@@ -43,7 +43,7 @@ $container = $configurator->createContainer();
 
 ####################################### PART 2 #######################################
 # Add container instance to logger, so it can pull some info from there.
-if($logger){
+if (isset($logger)) {
 	$logger->setContainer($container);
 }
 ####################################### PART 2 #######################################
